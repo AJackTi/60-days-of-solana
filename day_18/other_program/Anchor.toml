@@ -1,11 +1,12 @@
 [toolchain]
+anchor_version = "0.29.0"
 
 [features]
 seeds = false
 skip-lint = false
 
 [programs.localnet]
-other_program = "EW6R34TciFADwYMyWNeq5fQcpYsTd22Sf5GJKGES7Hnr"
+other_program = "Dn3jP8qvtLdXuqtrrskLhhaaU7Encc1BhjUSPUCDADsQ"
 
 [registry]
 url = "https://api.apr.dev"

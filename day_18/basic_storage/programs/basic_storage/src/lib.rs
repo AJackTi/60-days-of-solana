@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 use std::mem::size_of;
 
-declare_id!("8Cw5uFoNm7rvHMTKMLz6AxyK1fdT7Jsmn5coSBN7hRe8");
+declare_id!("9AKFWN6v2CA5XBWTSpdWVpru6hmbfp2Kt4veTWYPpbym");
 
 #[program]
 pub mod basic_storage {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
         Ok(())
     }
 

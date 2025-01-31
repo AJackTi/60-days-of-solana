@@ -1,16 +1,20 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 
-declare_id!("B2p3DyxhSMcJVWU2RUMcvkj6GqxedYT4PPWRXoKY4UFE");
+declare_id!("CLJzMDKPUhKEaWRdNpbdoSCw1JmKg1Qc97F8Sc3D7K5d");
 
 #[program]
 pub mod day_23 {
     use super::*;
 
-    pub fn send_sol(ctx: Context<SendSol>, amount: u64) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        msg!("Greetings from: {:?}", ctx.program_id);
+        Ok(())
+    }
 
+    pub fn send_sol(ctx: Context<SendSol>, amount: u64) -> Result<()> {
         let cpi_context = CpiContext::new(
-            ctx.accounts.system_program.to_account_info(), 
+            ctx.accounts.system_program.to_account_info(),
 
             system_program::Transfer {
                 from: ctx.accounts.signer.to_account_info(),
@@ -19,7 +23,6 @@ pub mod day_23 {
         );
 
         let res = system_program::transfer(cpi_context, amount);
-
         if res.is_ok() {
             return Ok(());
         } else {
@@ -27,42 +30,45 @@ pub mod day_23 {
         }
     }
 
-    pub fn split_sol(ctx: Context<SplitSol>, amount: u64) -> Result<()> {
-        let recipients = [
-          ctx.accounts.recipient1.to_account_info(),
-          ctx.accounts.recipient2.to_account_info()
-        ];
-        let transfer_amount = amount / recipients.len() as u64;
+    pub fn send_split_sol(ctx: Context<SendSplitSol>, amount: u64) -> Result<()> {
+        let amount1 = amount / 2;
+        let amount2 = amount - amount1;
+        let cpi_context = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
 
-        for recipient in recipients {
+            system_program::Transfer {
+                from: ctx.accounts.signer.to_account_info(),
+                to: ctx.accounts.recipient1.to_account_info(),
+            }
+        );
+
+        let res = system_program::transfer(cpi_context, amount1);
+        if res.is_ok() {
             let cpi_context = CpiContext::new(
-                ctx.accounts.system_program.to_account_info(), 
+                ctx.accounts.system_program.to_account_info(),
 
                 system_program::Transfer {
                     from: ctx.accounts.signer.to_account_info(),
-                    to: recipient,
+                    to: ctx.accounts.recipient2.to_account_info(),
                 }
             );
 
-            let res = system_program::transfer(cpi_context, transfer_amount);
-
+            let res = system_program::transfer(cpi_context, amount2);
             if res.is_ok() {
-                continue;
+                return Ok(());
             } else {
                 return err!(Errors::TransferFailed);
             }
+        } else {
+            return err!(Errors::TransferFailed);
         }
-
-        Ok(())
     }
 
-    // 'a, 'b, 'c are Rust lifetimes, ignore them for now
-    pub fn split_sol_dynamic<'a, 'b, 'c, 'info>(
-        ctx: Context<'a, 'b, 'c, 'info, SplitSolDynamic<'info>>,
-        amount: u64,
+    pub fn send_remaining_split_sol<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, SplitSol<'info>>,
+        amount: u64
     ) -> Result<()> {
-
-        let amount_each_gets = amount / ctx.remaining_accounts.len() as u64;
+        let amount_each_gets = amount / (ctx.remaining_accounts.len() as u64);
         let system_program = &ctx.accounts.system_program;
 
         // note the keyword `remaining_accounts`
@@ -79,10 +85,12 @@ pub mod day_23 {
                 return err!(Errors::TransferFailed);
             }
         }
-
         Ok(())
     }
 }
+
+#[derive(Accounts)]
+pub struct Initialize {}
 
 #[error_code]
 pub enum Errors {
@@ -95,30 +103,31 @@ pub struct SendSol<'info> {
     /// CHECK: we do not read or write the data of this account
     #[account(mut)]
     recipient: UncheckedAccount<'info>,
-    
-    system_program: Program<'info, System>,
 
-    #[account(mut)]
+    #[account(signer)]
     signer: Signer<'info>,
+
+    system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct SendSplitSol<'info> {
+    /// CHECK: we do not read or write the data of this account
+    #[account(mut)]
+    recipient1: UncheckedAccount<'info>,
+
+    /// CHECK: we do not read or write the data of this account
+    #[account(mut)]
+    recipient2: UncheckedAccount<'info>,
+
+    #[account(signer)]
+    signer: Signer<'info>,
+
+    system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
 pub struct SplitSol<'info> {
-    /// CHECK: we do not read or write the data of this account
-    #[account(mut)]
-    recipient1: UncheckedAccount<'info>,
-    /// CHECK: we do not read or write the data of this account
-    #[account(mut)]
-    recipient2: UncheckedAccount<'info>,
-    
-    system_program: Program<'info, System>,
-
-    #[account(mut)]
-    signer: Signer<'info>,
-}
-
-#[derive(Accounts)]
-pub struct SplitSolDynamic<'info> {
     #[account(mut)]
     signer: Signer<'info>,
     system_program: Program<'info, System>,

@@ -1,18 +1,18 @@
 [toolchain]
 
 [features]
-seeds = false
+resolution = true
 skip-lint = false
 
 [programs.localnet]
-day_21 = "14daYtTrYmn6KfkGYeWMKNJ6iQEZD3eLUozCzjL13ucS"
+day_21 = "6mwNiZ4Coxy1ir4aXyhcfG7g7bCaaKFsXPY4UACExPUp"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "/Users/ajackti/.config/solana/id.json"
+wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use std::mem::size_of;
 
-declare_id!("ApLXPPbSVSvEkkss2pzyKKpXFxXj6uuVN7Bsu3Y4XsBx");
+declare_id!("DdE5E3yBMLskKbJvBznmztfwu5oximGL1MQebLHHixR");
 
 const STARTING_POINTS: u32 = 10;
 
@@ -27,7 +27,7 @@ pub mod day_24 {
 
     pub fn transfer_points(ctx: Context<TransferPoints>, amount: u32) -> Result<()> {
         require!(
-            ctx.accounts.from.authority == ctx.accounts.signer.key(),
+            ctx.accounts.from.authority == ctx.accounts.authority.key(),
             Errors::SignerIsNotAuthority
         );
         require!(ctx.accounts.from.points >= amount, Errors::InsufficientPoints);
@@ -90,15 +90,16 @@ pub struct Initialize2<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(amount: u32)] // amount must be passed as an instruction
 pub struct TransferPoints<'info> {
-    #[account(mut)]
+    #[account(mut, has_one = authority @ Errors::SignerIsNotAuthority, constraint = from.points >= amount @ Errors::InsufficientPoints)]
     from: Account<'info, Player>,
 
     #[account(mut)]
     to: Account<'info, Player>,
 
     #[account(mut)]
-    signer: Signer<'info>,
+    authority: Signer<'info>,
 }
 
 #[account]

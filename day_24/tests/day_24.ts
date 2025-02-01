@@ -169,7 +169,7 @@ describe("day_24", () => {
       .accounts({
         from: playerAlice,
         to: playerBob,
-        signer: alice.publicKey,
+        authority: alice.publicKey,
       })
       .signers([alice])
       .rpc();

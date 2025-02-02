@@ -1,7 +1,9 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Day29 } from "../target/types/day_29";
 import bs58 from 'bs58';
+
+import * as anchor from '@coral-xyz/anchor';
+import { Program } from '@coral-xyz/anchor';
+
+import { Day29 } from '../target/types/day_29';
 
 describe("day_29", () => {
   // Configure the client to use the local cluster.
@@ -10,8 +12,11 @@ describe("day_29", () => {
   const program = anchor.workspace.Day29 as Program<Day29>;
 
   it("Initializes a storage account", async () => {
-    const seeds = []
-    const [myStorage, _bump] = anchor.web3.PublicKey.findProgramAddressSync(seeds, program.programId);
+    const seeds = [];
+    const [myStorage, _bump] = anchor.web3.PublicKey.findProgramAddressSync(
+      seeds,
+      program.programId
+    );
 
     await program.methods.initialize().accounts({ myStorage: myStorage }).rpc();
 
@@ -74,20 +79,24 @@ describe("day_29", () => {
       0020:   4a 0d 0e 18  91 7a 00 65  eb 9d 40 86  87 7f 45 4c   J....z.e..@...EL
       ```
     */
-    const solanaAddress = 'Ga6VV426xwCaN1J7yT7qr4ysyLhhJ5w3agUGMTexrZwL'
+    const solanaAddress = "Ga6VV426xwCaN1J7yT7qr4ysyLhhJ5w3agUGMTexrZwL";
     const solanaAddressBytes = bs58.decode(solanaAddress);
-    const solanaAddressHex = Buffer.from(solanaAddressBytes).toString('hex');
-    console.log(`Solana address hex: "${solanaAddressHex}"`)
+    const solanaAddressHex = Buffer.from(solanaAddressBytes).toString("hex");
+    console.log(`Solana address hex: "${solanaAddressHex}"`);
 
-    /* 
+    /*
       Solana deployed program "ProgramData Address": "Td763Uyr6rpyS2Sj7fk8MVsFC1amE83zYAW4KARoj45"
 
       The ProgramData Address stores the bytecode of the program.
     */
-    const solanaProgramDataAddress = 'Td763Uyr6rpyS2Sj7fk8MVsFC1amE83zYAW4KARoj45'
+    const solanaProgramDataAddress =
+      "Td763Uyr6rpyS2Sj7fk8MVsFC1amE83zYAW4KARoj45";
     const solanaProgramDataAddressBytes = bs58.decode(solanaProgramDataAddress);
-    const solanaProgramDataAddressHex = Buffer.from(solanaProgramDataAddressBytes).toString('hex');
-    console.log(`Solana ProgramData Address hex: "${solanaProgramDataAddressHex}"`)
+    const solanaProgramDataAddressHex = Buffer.from(
+      solanaProgramDataAddressBytes
+    ).toString("hex");
+    console.log(
+      `Solana ProgramData Address hex: "${solanaProgramDataAddressHex}"`
+    );
   });
-
 });

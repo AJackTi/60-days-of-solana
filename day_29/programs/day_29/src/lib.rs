@@ -14,13 +14,9 @@ pub mod day_29 {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init,
-              payer = signer,
-              space=size_of::<MyStorage>() + 8,
-              seeds = [],
-              bump)]
+    #[account(init, payer = signer, space = size_of::<MyStorage>() + 8, seeds = [], bump)]
     pub my_storage: Account<'info, MyStorage>,
-    
+
     #[account(mut)]
     pub signer: Signer<'info>,
 
@@ -31,4 +27,3 @@ pub struct Initialize<'info> {
 pub struct MyStorage {
     x: u64,
 }
-

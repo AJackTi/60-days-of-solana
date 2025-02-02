@@ -1,17 +1,18 @@
 use anchor_lang::prelude::*;
 use std::mem::size_of;
 
-declare_id!("3XymXN3tc11oMRpb7piYdGB7E8PdM9c3WhuNTfSvPKE8");
+declare_id!("8viWXs1V6JE3uaw1hUnJHCRYkjx4TSZFSS1atMLVYvr3");
 
 #[program]
 pub mod day_30 {
     use super::*;
 
-    pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        msg!("Greetings from: {:?}", ctx.program_id);
         Ok(())
     }
 
-    pub fn delete(_ctx: Context<Delete>) -> Result<()> {
+    pub fn delete(ctx: Context<Delete>) -> Result<()> {
         Ok(())
     }
 }
@@ -29,7 +30,7 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct Delete<'info> {
-    #[account(mut, close = signer, )]
+    #[account(mut, close = signer,)]
     pub the_pda: Account<'info, ThePda>,
 
     #[account(mut)]

@@ -1,6 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Day10 } from "../target/types/day_10";
+import * as anchor from '@coral-xyz/anchor';
+import { Program } from '@coral-xyz/anchor';
+
+import { Day10 } from '../target/types/day_10';
 
 describe("day_10", () => {
   // Configure the client to use the local cluster.

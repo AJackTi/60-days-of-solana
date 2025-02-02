@@ -1,13 +1,14 @@
 use anchor_lang::prelude::*;
 use std::mem::size_of;
 
-declare_id!("Hftf1K7Mf7zJDQcjwWzehQUAMMeUPSxCqqFCrpBVFUeB");
+declare_id!("6i99aodjTUm6NSkygs75JcyyDZxSrJW621bYAPyB57e1");
 
 #[program]
 pub mod day_28 {
     use super::*;
 
-    pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        msg!("Greetings from: {:?}", ctx.program_id);
         Ok(())
     }
 
@@ -16,7 +17,7 @@ pub mod day_28 {
         Ok(())
     }
 
-    pub fn set_always_fails(ctx: Context<Set>, new_val: u32) -> Result<()> {
+    pub fn set_version_2(ctx: Context<Set>, new_val: u32) -> Result<()> {
         ctx.accounts.pda.value = new_val;
         return err!(Error::AlwaysFails);
     }
@@ -24,7 +25,7 @@ pub mod day_28 {
 
 #[error_code]
 pub enum Error {
-    #[msg(always fails)]
+    #[msg("Always fails")]
     AlwaysFails,
 }
 
